@@ -1,0 +1,27 @@
+2026-11-23 — editor, printer, Figma and GitHub release
+
+Added recipient PNG print. Rounded action/style/remove boxes. All editor labels
+now use 13px bold DM Sans and all editor values use regular DM Sans 16px.
+Bill DATE/TIME/ITEM/COST/TOTAL labels are bold gray; values remain black.
+Replaced subtitle toggles with + Add a subtext and separate remove control.
+Added custom animated rounded date/time panels, whole-field triggers, gray icons,
+quarter-hour time choices, calendar month navigation and basic keyboard support.
+Moved item removal below the row into a distinct bordered 36px button.
+New note entries have a 100-character limit and counter; old share notes retained.
+Coffee ring cropped from the right edge; crumpled style uses supplied photo.
+Printer bill moves bottom-first in three steps over 2.4 seconds and touches slot.
+User-supplied sound trimmed to 2.4 seconds; speaker replay handles autoplay blocks.
+Eight editable mobile/desktop SVG references, installable fonts and design tokens
+are provided for Figma. Import/layout caveats are documented in that folder.
+
+VALIDATION
+Checked canonical preview at 390px mobile and 1280px desktop. No horizontal
+overflow at 390px. Verified calendar month navigation, date/time selection,
+matching label size/font, subtitle add/remove, item removal, 100/100 note
+counter, live texture update, creator-to-recipient link,
+creator and recipient PNG downloads, and 2.4-second audio playback on replay.
+Inspected exported PNG: texture, font hierarchy, note, edges, black barcode,
+no printer hardware. No browser script errors observed in the final flow.
+Synthetic ?demo=1 data used; real browser draft was preserved.
+SVG export files are XML-valid; local files, assets and fonts included.
+Real iPhone/Android device testing and public HTTPS sharing remain launch checks.

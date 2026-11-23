@@ -1,0 +1,51 @@
+MAINTAINING THE PROJECT WITHOUT THIS CHAT
+
+GitHub should hold the source of truth. A private repository keeps code private
+while Netlify can still serve the website publicly. GitHub Free supports private
+repositories. Git itself provides version history without an AI subscription.
+Do not put personal bills, browser storage exports, credentials, or account
+cookies in the repository. This release contains no such data.
+
+ON ANOTHER COMPUTER
+Clone the repository or download its ZIP. Open the folder in your editor or
+coding assistant. Ask: 'Read AI-HANDOFF.txt and README.txt before making changes.
+Keep the site free and mobile-first. Make only the changes I request.'
+Run the local preview with Python, or any static server, and edit the files in
+site/. There is no dependency lockfile because there are no package dependencies.
+Keep a ZIP backup as well as GitHub. Future AI tools have their own usage limits;
+the app itself does not stop running when a coding assistant's credits run out.
+
+NORMAL CHANGE CYCLE
+Make one focused change. Preview locally. Run the relevant checks below. Save a
+Git commit with a descriptive message. Push the commit to GitHub. A connected
+Netlify site can publish the new source automatically. For an unwanted change,
+revert its commit and publish again. Keep design changes and new features in
+separate commits so rollback is easy. Never edit two disconnected copies and
+then guess which one is current.
+
+TARGETED MANUAL CHECKS
+- At 320px and 390px: no sideways page scrolling, usable inputs, rounded fields,
+  readable labels, and home CTA 'Create your bill'. Check a desktop width too.
+- Blank required fields prevent submit. Optional location/note/subtitle do not.
+- Location is centred between date/time; clearing it leaves the centre blank.
+  A long location wraps without covering date/time. Reload preserves the draft.
+- Paper/style changes affect the preview, shared bill, and downloaded PNG alike.
+- Text uses Libre Baskerville / DM Sans / Indie Flower with Helvetica backups.
+  The note is regular 400, with 0.03em tracking. Barcode is pure black.
+- The carousel has no pause button. It rotates every 5s unless hidden, focused,
+  hovered, or reduced motion is enabled; swiping/arrow keys still work.
+- 'Create bill' reaches ready.html and the paper feeds in 3 steps over 2.4s.
+  Reduced motion skips the animation. PNG export includes only the bill.
+- Copied link opens bill.html with the same content on another device AFTER
+  deployment. Older v2 links without location still render.
+- Footer credit opens exactly https://www.instagram.com/katsyso/ in a new tab.
+- No brand header on ready.html or bill.html; the brand on other pages goes home.
+
+FONTS
+The Latin webfont subsets are bundled with their original SIL OFL notices.
+Unsupported characters fall back to Helvetica/system sans-serif. Keep the
+licenses with redistributed fonts. An AI should not replace fonts silently.
+
+BEFORE LAUNCH
+Test iOS Safari and Android Chrome keyboard behaviour and how downloaded PNGs
+are saved. Hosting/deployment has not been exercised on a live account yet.

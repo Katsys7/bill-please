@@ -1,0 +1,12 @@
+ASSET PROVENANCE
+Fonts: Google Fonts, SIL Open Font License; bundled license files retained.
+Full installable TTFs in figma-ready/; web subsets in site/assets.
+Sources: https://github.com/google/fonts/tree/main/ofl/dmsans
+https://github.com/google/fonts/tree/main/ofl/librebaskerville
+https://github.com/google/fonts/tree/main/ofl/indieflower
+
+Crumpled photograph and printer sound supplied by the project owner.
+Texture copied unchanged; web/SVG/PNG render it at 34% opacity.
+Sound: freesound_community-printer-106935.mp3, first 100 MPEG Layer III frames,
+2.4 seconds / 48,000 bytes. Source file unchanged. No ownership or license
+for these supplied files is asserted by this package; retain their provenance.
