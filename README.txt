@@ -30,6 +30,7 @@ This is ordinary HTML, CSS, and JavaScript. You can edit it with any code editor
 or give the folder to another coding assistant. Start that assistant by asking
 it to read AI-HANDOFF.txt. Your current AI chat and local machine are not required.
 
-The project is published on GitHub. The public website still needs
-a Netlify deployment. See docs/DEPLOYMENT.txt for beginner instructions.
+Live website: https://bill-please.netlify.app/
+The project is published on GitHub and Netlify. See docs/DEPLOYMENT.txt
+for deployment settings and beginner instructions.
 The source code is included; browser drafts and personal bills are not.

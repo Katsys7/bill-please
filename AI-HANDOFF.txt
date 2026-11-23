@@ -70,7 +70,8 @@ is still a useful pre-launch step; viewport emulation isn't a real phone keyboar
 
 DEPLOYMENT / STATUS
 Repository: https://github.com/Katsys7/bill-please (public, owner-created).
-Website still needs deployment. Use Netlify Free, publish directory site,
+Live website: https://bill-please.netlify.app/
+Netlify Free, publish directory site,
 no build command. Vercel configuration is also provided. Stay on free plans.
 Any future AI platform has its own usage limits, but this code and the deployed
 app do not require Codex, ChatGPT, Antigravity, or Copilot to function.
@@ -88,3 +89,8 @@ browsers block autoplay; the speaker button replays it with a user gesture.
 Respect reduced motion. All other bill actions work without sound or animation.
 figma-ready/ contains editable SVG references, fonts, tokens, and import notes.
 These are not native Figma components/Auto Layout, nor a two-way code connection.
+
+MOBILE FOOTER
+At widths up to 620px, footer bottom padding is 80px plus the device safe area.
+Keep this clearance below the centered creator credit so Netlify Free’s fixed
+bottom-right badge does not obscure it. Desktop footer spacing is unchanged.
