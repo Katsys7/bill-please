@@ -1,0 +1,31 @@
+FIGMA-READY DESIGN REFERENCES
+
+CONTENTS
+01–04 mobile SVGs (390px), 01–04 desktop SVGs (1280px).
+Editable text, bill paths/barcode, fields, buttons, and supplied texture images.
+TTF files: installable fonts and SIL OFL licenses. design-tokens.json: shared values.
+Actual-page screenshots in ../docs/previews/ provide the visual reference.
+
+IMPORT INTO FIGMA — free account is enough
+1. Open this folder and install all three TTF font files on your computer. On macOS,
+   double-click each and choose Install Font. On Windows, right-click > Install.
+2. Open Figma's desktop app (or use its browser version with local font support).
+3. Create a new design file in Drafts.
+4. Drag the eight SVG files onto the canvas. Each imports as a group with editable
+   text/vector layers. Ungroup a page or double-click to select its contents.
+5. Use Frame selection if you want each group to become a frame. Arrange the
+   mobile pages left to right: Home, Design, Ready, Recipient. Do the same below
+   for desktop. Rename layers and turn repeated controls into components as needed.
+6. Select any text to change its content, typeface or size; select a rectangle to
+   change fill, border or corner radius. The bill texture is an embedded image.
+7. Use Prototype connections to link buttons to frames if desired. Save to Figma.
+
+SCOPE
+These are SVG design references, not native .fig files, Auto Layout components,
+responsive constraints or a synchronized code export. Text wrapping, shadows,
+rotated carousel cards and radio icons can differ slightly from the live site;
+use ../docs/previews/ and the browser as the authority. Bill typography and
+paths come directly from the app's SVG renderer. Animation/audio are in code.
+Figma edits do not update the website automatically: export/share the design
+with your next coding assistant and ask it to implement the changes in site/.
+No Figma plugin, subscription or AI generation is required by these files.
