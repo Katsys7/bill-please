@@ -16,6 +16,7 @@ AI-HANDOFF.txt           Read this before another AI changes the project
 docs/DEPLOYMENT.txt      Free hosting comparison and launch steps
 docs/MAINTENANCE.txt     GitHub, another computer, backups, and manual checks
 docs/CHANGELOG.txt       Latest changes and validation status
+figma-ready/             Editable SVG design references, fonts and import notes
 SHA256SUMS.txt            Fingerprints of the portable website files
 
 RECOMMENDATION
@@ -29,6 +30,6 @@ This is ordinary HTML, CSS, and JavaScript. You can edit it with any code editor
 or give the folder to another coding assistant. Start that assistant by asking
 it to read AI-HANDOFF.txt. Your current AI chat and local machine are not required.
 
-The project is prepared for GitHub publishing. The public website still needs
+The project is published on GitHub. The public website still needs
 a Netlify deployment. See docs/DEPLOYMENT.txt for beginner instructions.
 The source code is included; browser drafts and personal bills are not.
