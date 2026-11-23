@@ -1,0 +1,1 @@
+Bundled local fonts, paper textures and printer audio. See docs/ASSETS.txt.
