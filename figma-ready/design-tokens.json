@@ -1,0 +1,33 @@
+{
+  "colors": {
+    "cream": "#f5f0e7",
+    "ink": "#181a17",
+    "sage": "#d5ddca",
+    "field": "#fffdf8",
+    "label": "#757a71"
+  },
+  "fonts": {
+    "primary": "Libre Baskerville",
+    "interface": "DM Sans",
+    "billNote": "Indie Flower",
+    "fallback": "Helvetica"
+  },
+  "editor": {
+    "labelPx": 13,
+    "labelWeight": 700,
+    "valuePx": 16,
+    "valueWeight": 400,
+    "fieldRadiusPx": 10,
+    "noteCharacterLimit": 100
+  },
+  "motion": {
+    "printerSeconds": 2.4,
+    "printerSteps": 3,
+    "carouselSeconds": 5,
+    "popoverSeconds": 0.2
+  },
+  "viewports": {
+    "mobile": 390,
+    "desktop": 1280
+  }
+}
