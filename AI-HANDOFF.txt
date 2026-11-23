@@ -1,0 +1,90 @@
+BILL, PLEASE — HANDOFF FOR ANY CODING ASSISTANT
+Latest release: 2026-11-23
+
+OWNER'S CONSTRAINTS
+Keep runtime hosting and dependencies free. Do not add paid APIs, subscriptions,
+accounts, databases, analytics, or a framework without a concrete user request.
+Conserve AI usage. Make focused changes and run one appropriate validation pass.
+Mobile is the primary audience; retain desktop support. Use only the UI wording
+already present or explicitly requested. Do not invent extra marketing sections.
+Do not overwrite the user's saved browser draft while testing; test synthetic
+bills through a new ready.html URL payload or back up and restore the draft.
+
+STACK / FILE MAP
+site/index.html  Home: linked brand, heading, stacked bill carousel, CTA, footer.
+site/design.html Editor: preview, paper/style, title/subtitle, optional location,
+                 date/time, item/cost pairs, text total, note, arrow submit.
+site/ready.html  Creator's final page: printer feed, copy link, recipient preview,
+                 PNG export, create another. No brand header.
+site/bill.html   Recipient view: bill, PNG print, and home CTA. No brand header.
+site/app.js      Storage, validation, share encoding, layout, SVG/Canvas rendering,
+                 textures, carousel, form handling, and printer timing.
+site/pickers.js  Custom rounded calendar and quarter-hour time popovers.
+site/styles.css  Design tokens, regular/bold font faces, layouts, animation, responsive
+                 and reduced-motion rules.
+site/assets/     All fonts and texture swatches, with original font licenses.
+
+DESIGN
+Libre Baskerville: primary text, title, subtitle, entered item/cost/total values.
+DM Sans: former Inter locations, including bill labels and date/time/location.
+Indie Flower: final bill note, regular 400 with 0.03em tracking.
+All editor fields use DM Sans 16px; labels use bold DM Sans 13px.
+Every family falls back to Helvetica, then sans-serif.
+Cream, charcoal, muted sage interface; paper/stain materials add natural tones.
+Rounded entry fields, slim black/white pill buttons, short heavy SVG arrows.
+Irregular worn edges and a contrasting bill outline. Barcode always #000000.
+The home CTA is 'Create your bill'. Footer credit links to Instagram.
+Paper = vintage/white/mint. Style = perforated/coffee/crumpled.
+There is no carousel pause button; keep reduced-motion and manual navigation.
+
+DATA / COMPATIBILITY
+Draft key: bill-please-draft-v2. Final key: bill-please-final-v2.
+Normalize() handles untrusted data, older paper names, and missing location.
+Required: title, valid date, quarter-hour time, at least one complete item/cost.
+Optional: subtitle (hasSubtitle), location (60 chars), total text, final note.
+A shared link is bill.html# followed by base64url-encoded UTF-8 JSON. It is a
+self-contained snapshot, not encryption. Anyone with the link can read it.
+Keep older links working; don't remove normalization just because no backend
+exists. No bill is uploaded by the app. Copies of old links cannot be revoked.
+No stored short URLs, sync, or per-bill social-image metadata exist currently.
+
+RENDERING
+layoutBill() returns the one measured layout for both SVG and PNG. Keep those
+outputs consistent when changing type, spacing, edges, textures, or fields.
+paperOutline() uses a fixed seed so SVG and PNG have the same irregular edge.
+Handwriting tracking is measured for wrapping and painted explicitly on Canvas.
+Location is centred in the date/time row, wraps inside its allotted width, and
+adds no space when empty. It must not overlap the date or time.
+Canvas exports only the bill at 3x size. It must never include printer hardware.
+ready.html has a 3-step, 2.4-second printer feed after fonts settle. Reduced
+motion reveals immediately. It must not block copying or PNG download.
+
+RUN / CHANGE / VERIFY
+Run python3 tools/serve.py from this folder. It disables local browser caching.
+No npm install, API key, environment variable, or build command is necessary.
+A browser's own cache may show an old page once: reload it before debugging.
+If app.js/styles.css change, bump their query version consistently in all four
+HTML pages. Keep font files local and their license notices intact.
+Use docs/MAINTENANCE.txt's targeted checks. Actual iPhone/Android hardware testing
+is still a useful pre-launch step; viewport emulation isn't a real phone keyboard.
+
+DEPLOYMENT / STATUS
+Repository: https://github.com/Katsys7/bill-please (public, owner-created).
+Website still needs deployment. Use Netlify Free, publish directory site,
+no build command. Vercel configuration is also provided. Stay on free plans.
+Any future AI platform has its own usage limits, but this code and the deployed
+app do not require Codex, ChatGPT, Antigravity, or Copilot to function.
+
+NOVEMBER 23 UPDATE
+New notes are limited to 100 characters with a counter. normalize() retains up
+to 400 characters for older share-link compatibility; don't truncate old links.
+?demo=1 on design.html uses synthetic data and disables storage writes on that
+page and its ready.html redirect. Use this for checks; preserve real drafts.
+Crumpled style uses assets/crumpled-paper.png in both SVG and PNG with opacity .34.
+Coffee ring center is just beyond the right edge, yielding a cropped half-ring.
+Printer feed translates the bill from -100% to 0 in three steps over 2.4s, showing
+its lower part first. Sound is the first 2.4s of the owner's supplied MP3. Some
+browsers block autoplay; the speaker button replays it with a user gesture.
+Respect reduced motion. All other bill actions work without sound or animation.
+figma-ready/ contains editable SVG references, fonts, tokens, and import notes.
+These are not native Figma components/Auto Layout, nor a two-way code connection.
