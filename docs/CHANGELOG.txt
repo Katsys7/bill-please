@@ -23,8 +23,8 @@ printer action sequencing/replay, recipient loading, old links, reduced motion
 and missing-link handling. No script errors in these checks.
 Inspected an actual Canvas PNG of the coffee bill.
 Full Chrome visual layout testing was blocked by execution restrictions in
-this session; do not claim it passed. Live Netlify storage/deploy verification
-is still required after publishing.
+this session; do not claim it passed. Live Netlify verification passed after publishing: POST 201, stored Unicode
+bill GET round-trip, 50-character /b/ID route, and new release on all four pages.
 
 2026-11-23 — editor, printer, Figma and GitHub release
 

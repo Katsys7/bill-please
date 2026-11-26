@@ -118,3 +118,10 @@ cap can pause service, so this is not unlimited traffic or unlimited storage.
 Do not enable paid upgrades or auto recharge. No AI credits are needed to run.
 Vercel/GitHub Pages can still serve the frontend, but these new short links need
 the Netlify function/store or an explicitly approved replacement implementation.
+
+LIVE VERIFICATION — 2026-11-26
+Release 20261126r1 is serving on all four live pages. Tested the actual deployed
+API: POST returned 201, GET restored the same Unicode bill, and its 50-character
+/b/ID URL returned the recipient HTML with the root base URL intact.
+Frontend DOM integration and PNG checks passed locally. Full Chrome visual
+layout checking was blocked by this session’s execution restrictions.
