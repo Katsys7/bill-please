@@ -1,36 +1,28 @@
 BILL, PLEASE
-Release: 2026-11-23
-
-START HERE
-The complete website is in site/. No installation or build is needed.
-From this folder, run: python3 tools/serve.py
-On Windows, if needed: py tools/serve.py
-Then open http://127.0.0.1:4173/ in a browser.
-Python is only a local preview convenience; any static web server can serve site/.
-
-CONTENTS
-site/                    Complete deployable website, including local fonts
-netlify.toml             Publish site/ with no build command
-vercel.json              Alternative static deployment configuration
-AI-HANDOFF.txt           Read this before another AI changes the project
-docs/DEPLOYMENT.txt      Free hosting comparison and launch steps
-docs/MAINTENANCE.txt     GitHub, another computer, backups, and manual checks
-docs/CHANGELOG.txt       Latest changes and validation status
-figma-ready/             Editable SVG design references, fonts and import notes
-SHA256SUMS.txt            Fingerprints of the portable website files
-
-RECOMMENDATION
+Release: 2026-11-26
+Live: https://bill-please.netlify.app/
 Repository: https://github.com/Katsys7/bill-please
-This is the public repository the owner created. Browser bills are not included.
-Connect that repository to Netlify Free. Publish directory: site.
-Keep using the free provider address. No backend, paid domain, paid add-ons,
-or AI subscription is needed to keep the deployed website running.
 
-This is ordinary HTML, CSS, and JavaScript. You can edit it with any code editor
-or give the folder to another coding assistant. Start that assistant by asking
-it to read AI-HANDOFF.txt. Your current AI chat and local machine are not required.
+The frontend is in site/. It is ordinary HTML, CSS and JavaScript.
+A small Netlify Function stores completed bills and makes short /b/ID links.
+No paid service, AI API, custom domain or separate storage account is needed.
+Keep Netlify on Free; its included hosting credits have a hard cap.
 
-Live website: https://bill-please.netlify.app/
-The project is published on GitHub and Netlify. See docs/DEPLOYMENT.txt
-for deployment settings and beginner instructions.
-The source code is included; browser drafts and personal bills are not.
+PREVIEW / TEST
+UI preview: python3 tools/serve.py (Windows: py tools/serve.py).
+Open http://127.0.0.1:4173/. Python preview does not run the share-link backend.
+Full local backend preview requires Node 22+, npm ci, and Netlify CLI dev.
+Offline API tests: npm ci, then npm test.
+The @netlify/blobs dependency is pinned in package-lock.json. Netlify installs
+it automatically when deploying from the repository. No build command needed.
+
+MAINTENANCE
+Start any new coding assistant with AGENTS.md and AI-HANDOFF.txt.
+Keep publish directory site; keep main connected in Netlify. New commits to main
+automatically deploy when automatic publishing is enabled.
+Completed bills used for short links are stored in Netlify Blobs. Draft edits
+stay in the browser. Old long share links continue working.
+Do not delete or rename the bill-please-shared-v1 store: existing short links
+depend on it. Save the code in GitHub and keep a separate ZIP backup.
+figma-ready/ was intentionally not updated for this release.
+Vercel's static configuration does not implement the Netlify short-link backend.

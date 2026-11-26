@@ -1,3 +1,31 @@
+2026-11-26 — wording, controls, material styles and short share links
+
+Implemented requested copy changes, Color label, Create and SAVE buttons,
+Created by footer (+1px), Link copied ✓ feedback, compact gray item removal,
+subtext spacing without its minus button, vertically centered TOTAL label,
+contained style icons including the supplied crumpled icon, and one irregular
+coffee stain at top right. PREVIEW/SAVE are transparent with dark borders.
+Recipient SAVE has the same footprint as Create your own with rounded corners.
+Home carousel fades in before its rotation starts. Ready-page action buttons
+fade in after the printer feed; reload icon replays feed and sound.
+
+New same-site /b/ID links persist completed bills in Netlify Blobs through one
+small Netlify Function. Added shared schema, pinned SDK, lockfile and six API
+contract tests. Legacy fragment links remain supported. No draft uploads,
+new accounts, paid services or framework. Figma folder intentionally unchanged.
+
+VALIDATION
+Six backend tests passed: Unicode round-trip/persistence, validation/body cap,
+origin/media/method rejection, missing IDs, store failure, legacy schema.
+DOM integration passed: wording, compact control structure/styles, demo storage
+protection, short-link flow (50-character URL), copy feedback, PNG generation,
+printer action sequencing/replay, recipient loading, old links, reduced motion
+and missing-link handling. No script errors in these checks.
+Inspected an actual Canvas PNG of the coffee bill.
+Full Chrome visual layout testing was blocked by execution restrictions in
+this session; do not claim it passed. Live Netlify storage/deploy verification
+is still required after publishing.
+
 2026-11-23 — editor, printer, Figma and GitHub release
 
 Added recipient PNG print. Rounded action/style/remove boxes. All editor labels

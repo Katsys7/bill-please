@@ -1,8 +1,10 @@
 # Project instructions
 
-Read `AI-HANDOFF.txt` and `README.txt` first. Website source is in `site/`.
-Keep the runtime free, mobile-first, dependency-free, and portable. Use the
-existing measured layout for both SVG and PNG. Preserve shared-link backward
-compatibility and user browser drafts. New services, backend work, broad
-redesigns, or a framework migration require an actual user request. Use the
-focused manual checks in `docs/MAINTENANCE.txt` and retain bundled font licenses.
+Read AI-HANDOFF.txt and README.txt first. Website source is in site/. Keep it
+free and mobile-first. The approved short-link backend is one Netlify Function
+with Netlify Blobs and its pinned SDK dependency; add no further services or
+frameworks without a user request. Keep the shared SVG/PNG layout and old
+fragment links working. Preserve real browser drafts; use ?demo=1 and synthetic
+receipts for tests. Run npm test for backend changes and focused UI checks for
+visual changes. Retain bundled font licenses. Do not update figma-ready/ unless
+the user explicitly asks. Never commit credentials, node_modules or personal bills.

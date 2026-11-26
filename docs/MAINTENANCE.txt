@@ -49,3 +49,10 @@ licenses with redistributed fonts. An AI should not replace fonts silently.
 BEFORE LAUNCH
 Test iOS Safari and Android Chrome keyboard behaviour and how downloaded PNGs
 are saved. Hosting/deployment has not been exercised on a live account yet.
+
+NOVEMBER 26 UPDATE
+Read current AI-HANDOFF.txt first: short links now use a Netlify Function and
+Blobs with one pinned dependency. The frontend remains static. Use npm ci and
+npm test for backend work. Python is only a UI preview. Do not modify Figma
+references unless asked. New wording uses Color, Create, SAVE and Created by.
+Keep old fragment links and the Netlify site-wide store intact.

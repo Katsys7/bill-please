@@ -5,14 +5,15 @@
 <meta name="theme-color" content="#f5f0e7"><title>Your bill is ready! · bill, please</title>
 <link rel="icon" href="data:,"><link rel="preload" href="assets/LibreBaskerville.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/DMSans.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="assets/IndieFlower.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="styles.css?v=20261123r3"><script src="app.js?v=20261123r2" defer></script>
+<link rel="stylesheet" href="styles.css?v=20261126r1"><script src="bill-data.js?v=20261126r1" defer></script><script src="app.js?v=20261126r1" defer></script>
 </head>
 <body data-page="ready">
 <main class="finished-page">
-<div class="intro"><h1>Your bill is ready!</h1><p>Copy the link or download it and share it with a friend</p></div>
-<div class="printer-scene printer-pending" id="printer-scene"><div class="printer-machine"><div class="printer-slot" aria-hidden="true"></div><button type="button" class="printer-sound" id="printer-sound" aria-label="Replay printing with sound"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10h4l5-4v12l-5-4H4zM17 8c3 2 3 6 0 8"/></svg></button></div><div class="print-window"><div class="final-bill" id="final-bill" aria-label="Final bill"></div></div></div>
-<div class="share-actions"><button class="pill copy-link" id="copy-link">Copy link to share</button><div class="square-actions"><a class="square-action" id="preview-link" href="bill.html" target="_blank" rel="noopener">PREVIEW <svg class="arrow arrow-diagonal" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13m-5-5 5 5-5 5"/></svg></a><button class="square-action" id="print">PRINT <svg class="arrow arrow-down" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13m-5-5 5 5-5 5"/></svg></button></div><button class="pill create-another" id="create-another">Create another</button></div>
+<div class="intro"><h1>Your bill is ready!</h1><p>Copy the link or save it to share it with a friend</p></div>
+<div class="printer-scene printer-pending" id="printer-scene"><div class="printer-machine"><div class="printer-slot" aria-hidden="true"></div><button type="button" class="printer-sound" id="printer-sound" aria-label="Replay animation and sound"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 9a7 7 0 1 0 .2 5M19 4v5h-5"/></svg></button></div><div class="print-window"><div class="final-bill" id="final-bill" aria-label="Final bill"></div></div></div>
+<div class="share-actions actions-pending" inert><button class="pill copy-link" id="copy-link">Copy link to share</button><div class="square-actions"><a class="square-action" id="preview-link" href="bill.html" target="_blank" rel="noopener">PREVIEW <svg class="arrow arrow-diagonal" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13m-5-5 5 5-5 5"/></svg></a><button class="square-action" id="print">SAVE <svg class="arrow arrow-down" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13m-5-5 5 5-5 5"/></svg></button></div><button class="pill create-another" id="create-another">Create another</button></div>
+<p id="share-status" class="operation-status" role="status" hidden></p>
 <audio id="printer-audio" src="assets/printer.mp3" preload="auto"></audio>
 </main>
-<footer class="site-footer">Designed &amp; built by <a href="https://www.instagram.com/katsyso/" target="_blank" rel="noopener noreferrer">@katsyso</a></footer>
+<footer class="site-footer">Created by <a href="https://www.instagram.com/katsyso/" target="_blank" rel="noopener noreferrer">@katsyso</a></footer>
 </body></html>

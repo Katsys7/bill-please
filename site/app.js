@@ -7,9 +7,7 @@ const SANS = '"DM Sans", Helvetica, sans-serif';
 const HAND = '"Indie Flower", Helvetica, sans-serif';
 const DRAFT_KEY = 'bill-please-draft-v2';
 const FINAL_KEY = 'bill-please-final-v2';
-const PAPERS = {vintage:'#f2e7ce', white:'#ffffff', mint:'#e5ebdf'};
-const STYLES = {perforated:'#181a17', coffee:'#181a17', crumpled:'#181a17'};
-const MAX_ITEMS = 12;
+const {PAPERS,STYLES,MAX_ITEMS,dateIsValid,timeIsValid,normalize,complete}=BillData;
 const measureCanvas = document.createElement('canvas');
 const measure = measureCanvas.getContext('2d');
 let currentBill;
@@ -25,18 +23,6 @@ function localTime() {
 function blankBill() {
   return {v:2,title:'',subtitle:'',hasSubtitle:false,location:'',date:localDate(),time:localTime(),items:[{name:'',cost:''}],total:'',note:'',paper:'white',style:'perforated'};
 }
-function dateIsValid(value) {
-  if(typeof value!=='string'||!/^\d{4}-\d{2}-\d{2}$/.test(value)||value<'1900-01-01') return false;
-  const [year,month,day]=value.split('-').map(Number);
-  const date=new Date(year,month-1,day);
-  return date.getFullYear()===year&&date.getMonth()===month-1&&date.getDate()===day;
-}
-function timeIsValid(value) {return typeof value==='string'&&/^([01]\d|2[0-3]):(00|15|30|45)$/.test(value)}
-function clean(value,max) {return typeof value==='string'?value.slice(0,max):''}
-function normalize(value) {
-  if(!value||typeof value!=='object'||!Array.isArray(value.items)) throw new Error('Invalid bill');
-  return {v:2,title:clean(value.title,60),subtitle:value.hasSubtitle===true?clean(value.subtitle,120):'',hasSubtitle:value.hasSubtitle===true,location:clean(value.location,60),date:dateIsValid(value.date)?value.date:'',time:timeIsValid(value.time)?value.time:'',items:value.items.slice(0,MAX_ITEMS).map(item=>({name:clean(item?.name,90),cost:clean(item?.cost,60)})),total:clean(value.total,70),note:clean(value.note,400),paper:Object.hasOwn(PAPERS,value.paper)?value.paper:({smooth:'white',fiber:'vintage',laid:'mint'}[value.paper]||'white'),style:Object.hasOwn(STYLES,value.style)?value.style:'perforated'};
-}
 function readStored(key) {try {const raw=localStorage.getItem(key);return raw?normalize(JSON.parse(raw)):null} catch {return null}}
 function storeBill(key,value) {if(new URLSearchParams(location.search).has('demo'))return;try{localStorage.setItem(key,JSON.stringify(value))}catch{/* The link still carries a complete bill when storage is unavailable. */}}
 function encodeBill(value) {
@@ -50,9 +36,6 @@ function decodeBill(hash) {
   const binary=atob(encoded.replace(/-/g,'+').replace(/_/g,'/'));
   const bytes=Uint8Array.from(binary,char=>char.charCodeAt(0));
   return normalize(JSON.parse(new TextDecoder('utf-8',{fatal:true}).decode(bytes)));
-}
-function complete(bill) {
-  return !!(bill.title.trim()&&dateIsValid(bill.date)&&timeIsValid(bill.time)&&bill.items.length&&bill.items.every(item=>item.name.trim()&&item.cost.trim()));
 }
 function dateLabel(value) {return dateIsValid(value)?value.split('-').reverse().join('/'):'DD/MM/YYYY'}
 function timeLabel(value) {
@@ -162,19 +145,26 @@ function paperMarks(paper,width,height) {
 function styleMarks(style,width,height) {
   const marks=[];
   if(style==='coffee') {
-    const cx=width+4,cy=height*.24,rx=67,ry=63;
-    function ring(radius,reverse=false) {
-      let points=[];
-      for(let i=0;i<=72;i++) {
-        const angle=i/72*Math.PI*2,rough=1+.018*Math.sin(i*.43)+.012*Math.cos(i*.77);
-        points.push([cx+Math.cos(angle)*rx*radius*rough,cy+Math.sin(angle)*ry*radius*rough]);
-      }
-      if(reverse)points.reverse();
-      return points.map((point,index)=>`${index?'L':'M'}${point[0]} ${point[1]}`).join(' ')+' Z';
+    let seed=715;const random=()=>{seed=(seed*1664525+1013904223)>>>0;return seed/4294967296};
+    const cx=width-43,cy=76,rx=53,ry=55;
+    const outer=t=>1+.009*Math.sin(t*3)+.006*Math.cos(t*7)+.003*Math.sin(t*31);
+    const thickness=t=>.048+.016*Math.sin(t*2+.3)+.006*Math.cos(t*13);
+    function band(offset=0,thin=1){
+      const points=[];
+      for(let i=0;i<=240;i++){const t=i/240*Math.PI*2,r=outer(t)+offset;points.push([cx+Math.cos(t)*rx*r,cy+Math.sin(t)*ry*r])}
+      for(let i=240;i>=0;i--){const t=i/240*Math.PI*2,r=outer(t)+offset-thickness(t)*thin;points.push([cx+Math.cos(t)*rx*r,cy+Math.sin(t)*ry*r])}
+      return points.map((v,j)=>`${j?'L':'M'}${v[0].toFixed(2)} ${v[1].toFixed(2)}`).join(' ')+' Z';
     }
-    marks.push({kind:'path',d:ring(1)+ring(.89,true),color:'#8b6038',opacity:.17});
-    marks.push({kind:'path',d:ring(1.045)+ring(1.01,true),color:'#8b6038',opacity:.07});
-    for(const [x,y,radius]of [[.97,.40,3],[.91,.43,2]])marks.push({kind:'circle',x:x*width,y:y*height,radius,color:'#8b6038',opacity:.12});
+    marks.push({kind:'path',d:band(),color:'#8c5725',opacity:.18});
+    marks.push({kind:'path',d:band(.007,.24),color:'#754114',opacity:.18});
+    for(let i=0;i<16;i++){
+      const start=random()*Math.PI*2,length=.09+random()*.26,points=[];
+      for(let j=0;j<=12;j++){const t=start+length*j/12,r=outer(t);points.push([cx+Math.cos(t)*rx*r,cy+Math.sin(t)*ry*r])}
+      for(let j=12;j>=0;j--){const t=start+length*j/12,r=outer(t)-(.025+random()*.01)*Math.sin(j/12*Math.PI);points.push([cx+Math.cos(t)*rx*r,cy+Math.sin(t)*ry*r])}
+      marks.push({kind:'path',d:points.map((v,j)=>`${j?'L':'M'}${v[0].toFixed(2)} ${v[1].toFixed(2)}`).join(' ')+' Z',color:'#794818',opacity:.12+random()*.12});
+    }
+    for(let i=0;i<210;i++){const t=random()*Math.PI*2,r=outer(t)-random()*.055+(random()-.5)*.04;marks.push({kind:'circle',x:cx+Math.cos(t)*rx*r,y:cy+Math.sin(t)*ry*r,radius:.10+random()*.28,color:'#805022',opacity:.12+random()*.22})}
+    for(const [x,y,r]of [[width-91,130,1.5],[width-104,114,.8],[width-16,142,1.3],[width-100,28,.6],[width-86,139,.45]])marks.push({kind:'circle',x,y,radius:r,color:'#805022',opacity:.20});
   }
   return marks;
 }
@@ -255,9 +245,9 @@ async function downloadBill(bill,button) {
   } catch(error){console.error(error);button.setAttribute('aria-label','Download failed. Try again.')}finally{button.disabled=false}
 }
 
-let carouselTimer,carouselActive=0;
+let carouselTimer,carouselIntroTimer,carouselActive=0;
 function setupHome() {
-  clearInterval(carouselTimer);
+  clearInterval(carouselTimer);clearTimeout(carouselIntroTimer);
   const samples=[
     {...blankBill(),title:'Sunday, unhurried',location:'Our corner café',hasSubtitle:true,subtitle:'Just us. Nowhere to be.',date:'2026-11-22',time:'10:15',items:[{name:'Coffee, gone cold',cost:'twice'},{name:'A walk with no plan',cost:'47 minutes'},{name:'One long conversation',cost:'overdue'}],total:'a day well spent',note:'Same time next Sunday?',paper:'vintage',style:'perforated'},
     {...blankBill(),title:'One more chapter',hasSubtitle:true,subtitle:'A very good Tuesday',date:'2026-11-17',time:'18:45',items:[{name:'Bookshop detour',cost:'1 hour'},{name:'A story we both loved',cost:'priceless'},{name:'Missing the last bus',cost:'worth it'}],total:'to be continued',note:'Some days deserve a sequel.',paper:'white',style:'coffee'},
@@ -271,12 +261,13 @@ function setupHome() {
   function next(direction=1){carouselActive=(carouselActive+direction+slides.length)%slides.length;position()}
   carousel.onkeydown=event=>{if(event.key==='ArrowRight'||event.key==='ArrowLeft'){event.preventDefault();next(event.key==='ArrowRight'?1:-1)}};
   let startX=0;carousel.onpointerdown=event=>{startX=event.clientX};carousel.onpointerup=event=>{const distance=event.clientX-startX;if(Math.abs(distance)>40)next(distance<0?1:-1)};
-  position();carouselTimer=setInterval(()=>{if(!paused&&!document.hidden&&!carousel.matches(':hover')&&!carousel.contains(document.activeElement))next()},5000);
+  position();
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{carousel.classList.add('carousel-visible');carouselIntroTimer=setTimeout(()=>{if(!paused)carouselTimer=setInterval(()=>{if(!document.hidden&&!carousel.matches(':hover')&&!carousel.contains(document.activeElement))next()},5000)},paused?0:650)}));
 }
 function setupDesign() {
   const params=new URLSearchParams(location.search),fresh=params.has('new'),demo=params.has('demo');
   let draft=demo?{...blankBill(),title:'Sunday, unhurried',hasSubtitle:true,subtitle:'Just us. Nowhere to be.',location:'Our corner café',items:[{name:'Coffee, gone cold',cost:'twice'},{name:'A walk with no plan',cost:'47 minutes'}],total:'a day well spent',note:'Same time next Sunday?'}:fresh?blankBill():(readStored(DRAFT_KEY)||blankBill());
-  if(fresh){storeBill(DRAFT_KEY,draft);history.replaceState(null,'',location.pathname)}
+  if(fresh&&!demo){storeBill(DRAFT_KEY,draft);history.replaceState(null,'',location.pathname)}
   currentBill=draft;
   const form=$('bill-form');
 
@@ -284,9 +275,8 @@ function setupDesign() {
   function refresh(){renderBill($('live-bill'),draft);storeBill(DRAFT_KEY,draft)}
   for(const [id,key]of Object.entries(bindings)){$(id).value=draft[key];$(id).addEventListener('input',()=>{draft[key]=$(id).value;if(id==='bill-note'){resizeNote();updateNoteCount()}refresh()})}
   for(const name of ['paper','style'])for(const radio of form.querySelectorAll(`input[name=${name}]`)){radio.checked=radio.value===draft[name];radio.addEventListener('change',()=>{draft[name]=radio.value;refresh()})}
-  function syncSubtitle(){const on=draft.hasSubtitle;$('subtitle-field').hidden=!on;$('add-subtitle').hidden=on;$('remove-subtitle').disabled=!on;$('bill-subtitle').disabled=!on}
+  function syncSubtitle(){const on=draft.hasSubtitle;$('subtitle-field').hidden=!on;$('add-subtitle').hidden=on;$('bill-subtitle').disabled=!on}
   $('add-subtitle').addEventListener('click',()=>{draft.hasSubtitle=true;syncSubtitle();refresh();$('bill-subtitle').focus()});
-  $('remove-subtitle').addEventListener('click',()=>{draft.hasSubtitle=false;syncSubtitle();refresh();$('add-subtitle').focus()});
   function renderItems(focusNew=false){
     $('item-fields').replaceChildren();
     draft.items.forEach((item,index)=>{
@@ -298,10 +288,11 @@ function setupDesign() {
         const star=document.createElement('span');star.setAttribute('aria-hidden','true');star.textContent='*';caption.append(star);
         const input=document.createElement('input');input.id=`${key}-${index}`;input.name=`${key}-${index}`;input.value=item[key];input.required=true;input.maxLength=max;input.autocomplete='off';input.setAttribute('aria-label',`${label} ${index+1}`);
         input.addEventListener('input',()=>{draft.items[index][key]=input.value;refresh()});
-        field.append(caption,input);row.append(field);
+        const heading=document.createElement('div');heading.className='item-heading';heading.append(caption);
+        if(key==='cost'&&index>0){const remove=document.createElement('button');remove.type='button';remove.className='item-remove';remove.setAttribute('aria-label',`Remove item ${index+1}`);remove.textContent='−';remove.addEventListener('click',()=>{draft.items.splice(index,1);renderItems();refresh();$('add-item').focus()});heading.append(remove)}
+        field.append(heading,input);row.append(field);
       }
       entry.append(row);
-      if(index>0){const remove=document.createElement('button');remove.type='button';remove.className='item-remove';remove.setAttribute('aria-label',`Remove item ${index+1}`);remove.textContent='−';remove.addEventListener('click',()=>{draft.items.splice(index,1);renderItems();refresh();$('add-item').focus()});entry.append(remove)}
       $('item-fields').append(entry);
     });
     $('add-item').disabled=draft.items.length>=MAX_ITEMS;
@@ -326,45 +317,79 @@ function setupDesign() {
   document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')storeBill(DRAFT_KEY,draft)});
   syncSubtitle();renderItems();refresh();
 }
+const SHARE_CACHE_KEY='bill-please-share-v1';
+async function fetchWithTimeout(url,options={}){
+  const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),15000);
+  try{return await fetch(url,{...options,signal:controller.signal})}finally{clearTimeout(timer)}
+}
+async function createShareLink(bill){
+  const signature=encodeBill(bill);
+  try{const cached=JSON.parse(localStorage.getItem(SHARE_CACHE_KEY));if(cached?.signature===signature&&/^[A-Za-z0-9_-]{16}$/.test(cached.id))return new URL('/b/'+cached.id,location.origin).href}catch{}
+  const response=await fetchWithTimeout('/api/bills',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(normalize(bill))});
+  if(!response.ok)throw new Error('Share link unavailable');
+  const result=await response.json();if(!/^[A-Za-z0-9_-]{16}$/.test(result.id))throw new Error('Invalid share response');
+  if(!new URLSearchParams(location.search).has('demo'))try{localStorage.setItem(SHARE_CACHE_KEY,JSON.stringify({signature,id:result.id}))}catch{}
+  return new URL('/b/'+result.id,location.origin).href;
+}
 function setupReady() {
   let bill;
   try{bill=location.hash?decodeBill(location.hash):readStored(FINAL_KEY)}catch{bill=null}
   if(!bill||!complete(bill)){location.replace('design.html');return}
   currentBill=bill;renderBill($('final-bill'),bill);
-  const share=new URL('bill.html',location.href);share.hash=encodeBill(bill);
-  $('preview-link').href=share.href;
+  const preview=$('preview-link'),status=$('share-status');let sharePromise,shareURL;
+  preview.href='#';preview.setAttribute('aria-busy','true');
+  function ensureShare(){
+    if(!sharePromise)sharePromise=createShareLink(bill).then(url=>{shareURL=url;preview.href=url;preview.removeAttribute('aria-busy');status.hidden=true;return url}).catch(error=>{sharePromise=null;preview.removeAttribute('aria-busy');status.textContent="Couldn't create a share link. Please try again.";status.hidden=false;throw error});
+    return sharePromise;
+  }
+  ensureShare().catch(()=>{});
   $('copy-link').addEventListener('click',async()=>{
-    const button=$('copy-link');
-    try{await navigator.clipboard.writeText(share.href);button.textContent='✓';button.setAttribute('aria-label','Link copied');setTimeout(()=>{button.textContent='Copy link to share';button.removeAttribute('aria-label')},1800)}
-    catch{window.prompt('Copy link to share',share.href)}
+    const button=$('copy-link');button.disabled=true;
+    try{const url=await ensureShare();try{await navigator.clipboard.writeText(url)}catch{window.prompt('Copy link to share',url);return}button.textContent='Link copied ✓';setTimeout(()=>{button.textContent='Copy link to share'},1800)}
+    catch{}finally{button.disabled=false}
+  });
+  preview.addEventListener('click',event=>{
+    if(shareURL)return;
+    event.preventDefault();const popup=window.open('about:blank','_blank');if(popup)popup.opener=null;
+    ensureShare().then(url=>{if(popup)popup.location.replace(url)}).catch(()=>{if(popup)popup.close()});
   });
   $('printer-sound').addEventListener('click',()=>startPrinterAnimation(true));
   $('print').addEventListener('click',()=>downloadBill(bill,$('print')));
   $('create-another').addEventListener('click',()=>{location.href='design.html?new=1'});
 }
+function revealShareActions(){const actions=document.querySelector('.share-actions');if(actions){actions.classList.add('actions-visible');actions.inert=false}}
+
 let printerStarted=false,printerFinish;
 function startPrinterAnimation(replay=false){
   if(printerStarted&&!replay)return;
   const scene=$('printer-scene');if(!scene)return;
   printerStarted=true;scene.classList.remove('printer-pending','is-printing');clearTimeout(printerFinish);
-  const audio=$('printer-audio');
-  if(matchMedia('(prefers-reduced-motion:reduce)').matches&&!replay){scene.dataset.printState='complete';return}
+  const audio=$('printer-audio'),actions=document.querySelector('.share-actions');if(actions){actions.classList.remove('actions-visible');actions.inert=true}
+  if(matchMedia('(prefers-reduced-motion:reduce)').matches&&!replay){scene.dataset.printState='complete';revealShareActions();return}
   void scene.offsetWidth;scene.classList.add('is-printing');scene.dataset.printState='feeding';
   if(audio){audio.pause();audio.currentTime=0;audio.volume=.45;audio.play().then(()=>{scene.dataset.sound='playing'}).catch(()=>{scene.dataset.sound='blocked'})}
-  printerFinish=setTimeout(()=>{scene.classList.remove('is-printing');scene.dataset.printState='complete';if(audio){audio.pause();audio.currentTime=0}},2400);
+  printerFinish=setTimeout(()=>{scene.classList.remove('is-printing');scene.dataset.printState='complete';revealShareActions();if(audio){audio.pause();audio.currentTime=0}},2400);
 }
-function setupShared() {
-  let bill;
-  try{bill=decodeBill(location.hash)}catch{location.replace('index.html');return}
-  if(!complete(bill)){location.replace('index.html');return}
-  currentBill=bill;renderBill($('shared-bill'),bill);
-  $('recipient-print').addEventListener('click',()=>downloadBill(bill,$('recipient-print')));
+async function setupShared() {
+  const save=$('recipient-print');save.hidden=true;
+  try{
+    let bill;
+    if(location.hash)bill=decodeBill(location.hash);
+    else{
+      const id=new URLSearchParams(location.search).get('id')||location.pathname.match(/^\/b\/([A-Za-z0-9_-]{16})\/?$/)?.[1];
+      if(!id||!/^[A-Za-z0-9_-]{16}$/.test(id))throw new Error('Invalid share link');
+      const response=await fetchWithTimeout('/api/bills?id='+encodeURIComponent(id));if(!response.ok)throw new Error('Bill not found');bill=normalize(await response.json());
+    }
+    if(!complete(bill))throw new Error('Invalid bill');currentBill=bill;await document.fonts.ready;renderBill($('shared-bill'),bill);save.hidden=false;
+    save.addEventListener('click',()=>downloadBill(bill,save));
+  }catch{const status=$('bill-status');status.textContent="This bill couldn't be loaded. Please check the link and try again.";status.hidden=false}
 }
+
 function refreshFontLayout(){
   const page=document.body.dataset.page;
   if(page==='home'){$('samples').replaceChildren();setupHome()}
   else if(currentBill){renderBill($(page==='design'?'live-bill':page==='ready'?'final-bill':'shared-bill'),currentBill);if(page==='ready')startPrinterAnimation()}
 }
 const setup={home:setupHome,design:setupDesign,ready:setupReady,bill:setupShared};
-setup[document.body.dataset.page]?.();
+if(document.body.dataset.page!=='home')setup[document.body.dataset.page]?.();
 Promise.allSettled([document.fonts.load('16px '+FONT),document.fonts.load('12px '+SANS),document.fonts.load('21px '+HAND),document.fonts.load('700 12px '+SANS),crumpledReady]).then(refreshFontLayout);

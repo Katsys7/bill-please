@@ -1,74 +1,50 @@
-PUT BILL, PLEASE ONLINE — beginner steps, checked 2026-11-23
+DEPLOYMENT — updated 2026-11-26
+Live: https://bill-please.netlify.app/
+Repository: https://github.com/Katsys7/bill-please
 
-YOUR PROJECT
-GitHub: https://github.com/Katsys7/bill-please
-Branch: main. The owner created a public repository. Source is visible publicly;
-visitors' bills are not uploaded to GitHub by the app. Website is not live yet.
+Keep the existing Netlify project connected to main, on the Free plan.
+Base directory blank; build command blank; publish directory site.
+The committed netlify.toml selects Node 22, bundles netlify/functions, and
+rewrites /b/ID to the recipient page. Netlify installs package-lock.json.
+No separate database account, API keys or paid plan is required.
 
-NETLIFY FREE: FIRST DEPLOYMENT
-1. Open https://app.netlify.com/ and create a free personal account, or sign in.
-   Use your personal email/GitHub so it remains available on another machine.
-   Select Free if asked for a plan. Do not select a paid trial or add-on.
-2. In the team dashboard, select Add new project, then Import a Git repository.
-   Older dashboard versions may call this Import an existing project.
-   Some dashboard versions say Add new site instead. Select GitHub as provider.
-3. GitHub may ask to install/authorize Netlify. Choose your personal Katsys7 account
-   and Only select repositories, then bill-please. Review and approve it yourself.
-   Return to Netlify and choose Katsys7/bill-please.
-4. Set branch to main. Leave Base directory blank. Leave Build command blank.
-   Set Publish directory to site (lowercase, no slash needed).
-   Leave Package directory, Functions directory, and environment variables empty.
-   netlify.toml already sets publish=site; retain that value if auto-detected.
-5. Choose Deploy/Publish. Wait until the production deploy says Published.
-   After a successful production deploy, choose Make public if the project is
-   private. New Netlify teams can start private by default. You can also use
-   Project configuration > General > Visitor access > Project visibility and
-   set Production to Public, then Save. Previews can remain private.
-   Open the supplied https://...netlify.app address. This is the public website.
-   Keep that free address; a custom domain is unnecessary.
-6. Optional: under Project configuration > General > Project details, change
-   the project/site name to an available name, which also changes the free URL.
-7. On your phone, create a bill, use Copy link, and send it to a friend/second
-   device. Confirm their page opens with the right bill and PRINT saves a PNG.
-   Check the Instagram credit, note, location, paper styles, and printer sound.
-8. Save the live URL in this document and README.txt when deployed.
+NEW SHORT-LINK BACKEND
+@netlify/blobs is the only runtime dependency. The deployed Function receives
+its storage context automatically. Completed bills are persisted in the
+site-wide store bill-please-shared-v1. Keep that name stable across deploys.
+Old bill.html#... links work without storage. New /b/ID links require this
+function/store; deploying only site/ by drag and drop will not deploy them.
+Use the connected Git repository to deploy the complete project.
 
-COST
-The current Netlify Free plan includes 300 hosting credits per month with a hard
-cap and no auto recharge. Its docs say Free is not charged; projects pause if
-its monthly allocation is used up. These are separate from ChatGPT credits.
-Stay on Free and use the generated domain. No backend, database, API keys,
-paid fonts, or AI API is required. Batch code updates to conserve deploy usage.
+POST /api/bills creates an immutable snapshot and returns a 16-character ID.
+GET /api/bills?id=ID reads it. There is no public list/delete/edit operation.
+Anyone with the link may read that completed bill. Draft edits stay local.
+The server validates and caps requests. Keep Netlify Free's hard cap; it can
+pause service if included usage is exhausted, but requires no automatic payment.
 
-UPDATING LATER
-Edit locally with any editor/AI. Upload changed files in the matching GitHub
-folders and commit them on main, or use GitHub Desktop to push one commit.
-Once connected, Netlify automatically deploys commits. Never replace the root
-with the site contents: keep publish directory site and preserve folder paths.
-For a bad deployment, open Deploys, select a known good deploy, and publish it.
+AFTER A PUSH
+Open Netlify > your project > Deploys. The commit should receive a successful
+production deploy and show Published. Refresh the site after it finishes.
+Test Create, Copy link to share, PREVIEW, and SAVE on a synthetic bill. Open the
+short /b/ID link on another device. Verify it still works after another deploy.
+If storage fails, SAVE still works and sharing shows a retry message.
+Check Netlify Function logs for operational errors, never log bill contents.
 
-MOVING TO ANOTHER MACHINE OR AI
-GitHub repository > green Code button > Download ZIP, then unzip. Or clone with
-GitHub Desktop. Open the entire project folder in Antigravity/Copilot/any editor.
-Tell the assistant to read AGENTS.md and AI-HANDOFF.txt first. For local preview:
-python3 tools/serve.py (Windows: py tools/serve.py); open http://127.0.0.1:4173/.
-No npm install or build command. GitHub holds code, Netlify serves the website,
-and your chosen AI helps edit it. The live app keeps running without AI credits.
+IF THE SITE IS PRIVATE
+Choose Make public, or Project configuration > General > Visitor access >
+Project visibility > Public. Keep the free netlify.app address.
 
-CURRENT LIMITS
-Share links embed the whole bill in the URL fragment; they may be long. They
-are snapshots and cannot be revoked. No accounts, cloud sync, stored short URLs,
-or unique per-bill social preview images. Browser drafts stay on that browser.
-No backend is needed for this version. Sound autoplay depends on the browser;
-the printer's speaker icon replays it. Reduced motion skips the initial feed.
+LOCAL DEVELOPMENT
+Node 22+, npm ci, npm test. Full backend preview: Netlify CLI dev against the
+site (sign in yourself if needed). Python tools/serve.py provides UI-only
+preview, not persistent short links. Keep local credentials out of Git.
 
-ALTERNATIVES
-Vercel Hobby: import repo, Framework Other, no build, output site. Configuration
-is supplied. GitHub Pages can serve this public repo but needs its own publish
-workflow. Netlify is already configured and is the simplest path here.
+OTHER HOSTS
+The supplied Vercel static config does not provide the short-link backend.
+Port that backend deliberately before changing hosts. Keep existing URLs stable.
 
 OFFICIAL REFERENCES
-https://docs.netlify.com/start/quickstarts/deploy-from-repository/
-https://docs.netlify.com/build/configure-builds/overview/
-https://docs.netlify.com/manage/security/secure-access-to-sites/project-visibility/
+https://docs.netlify.com/build/data-and-storage/netlify-blobs/
+https://docs.netlify.com/build/functions/overview/
+https://docs.netlify.com/deploy/create-deploys/
 https://docs.netlify.com/manage/accounts-and-billing/billing/billing-for-credit-based-plans/credit-based-pricing-plans/

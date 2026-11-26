@@ -1,96 +1,120 @@
 BILL, PLEASE — HANDOFF FOR ANY CODING ASSISTANT
-Latest release: 2026-11-23
+Current release: 2026-11-26
+Live: https://bill-please.netlify.app/
+GitHub: https://github.com/Katsys7/bill-please (main, public)
 
-OWNER'S CONSTRAINTS
-Keep runtime hosting and dependencies free. Do not add paid APIs, subscriptions,
-accounts, databases, analytics, or a framework without a concrete user request.
-Conserve AI usage. Make focused changes and run one appropriate validation pass.
-Mobile is the primary audience; retain desktop support. Use only the UI wording
-already present or explicitly requested. Do not invent extra marketing sections.
-Do not overwrite the user's saved browser draft while testing; test synthetic
-bills through a new ready.html URL payload or back up and restore the draft.
+OWNER'S REQUIREMENTS
+Keep costs at zero, stay on Netlify Free, and conserve AI usage. Mobile comes
+first; retain desktop support. Use only requested visible wording. Never modify
+figma-ready/ unless explicitly asked; it intentionally retains earlier references.
+Preserve real browser drafts. Use ?demo=1 and synthetic receipts for checks.
 
-STACK / FILE MAP
-site/index.html  Home: linked brand, heading, stacked bill carousel, CTA, footer.
-site/design.html Editor: preview, paper/style, title/subtitle, optional location,
-                 date/time, item/cost pairs, text total, note, arrow submit.
-site/ready.html  Creator's final page: printer feed, copy link, recipient preview,
-                 PNG export, create another. No brand header.
-site/bill.html   Recipient view: bill, PNG print, and home CTA. No brand header.
-site/app.js      Storage, validation, share encoding, layout, SVG/Canvas rendering,
-                 textures, carousel, form handling, and printer timing.
-site/pickers.js  Custom rounded calendar and quarter-hour time popovers.
-site/styles.css  Design tokens, regular/bold font faces, layouts, animation, responsive
-                 and reduced-motion rules.
-site/assets/     All fonts and texture swatches, with original font licenses.
+APPROVED STACK
+Static HTML/CSS/vanilla JavaScript frontend. On November 26 the owner requested
+genuinely short share links; the approved backend is one Netlify Function plus
+Netlify Blobs, using the existing Netlify account. @netlify/blobs is the only
+runtime package. Do not add another framework, database, provider, paid plan,
+API key, analytics, or subscription without a concrete request.
+
+FILES
+site/index.html       Home, stacked bills, delayed 5-second carousel.
+site/design.html      Live bill editor. Color and Style radio choices.
+site/ready.html       Printer, replay icon, copy, preview, SAVE, create another.
+site/bill.html        Recipient view, SAVE and home CTA; base href=/ supports /b/ID.
+site/bill-data.js     Shared pure schema/validation: browser global and Node export.
+site/app.js           Editor, renderer, legacy codec, sharing client, animations.
+site/pickers.js       Custom rounded date/calendar and 15-minute time pickers.
+site/styles.css       Fonts, responsive layouts, material thumbnails, animations.
+site/assets/          Bundled webfonts/licenses, textures, audio and supplied icon.
+netlify/functions/bills.mjs  Small POST/GET API, stored snapshots, request limits.
+netlify.toml          Static publish directory site, Node 22, function bundling,
+                      /b/:id internal rewrite to bill.html.
+package.json / package-lock.json  Pinned backend dependency; npm test.
+tests/sharing.test.mjs           Offline API contract tests with a fake store.
 
 DESIGN
-Libre Baskerville: primary text, title, subtitle, entered item/cost/total values.
-DM Sans: former Inter locations, including bill labels and date/time/location.
-Indie Flower: final bill note, regular 400 with 0.03em tracking.
-All editor fields use DM Sans 16px; labels use bold DM Sans 13px.
-Every family falls back to Helvetica, then sans-serif.
-Cream, charcoal, muted sage interface; paper/stain materials add natural tones.
-Rounded entry fields, slim black/white pill buttons, short heavy SVG arrows.
-Irregular worn edges and a contrasting bill outline. Barcode always #000000.
-The home CTA is 'Create your bill'. Footer credit links to Instagram.
-Paper = vintage/white/mint. Style = perforated/coffee/crumpled.
-There is no carousel pause button; keep reduced-motion and manual navigation.
+Libre Baskerville: primary text and entered bill title/subtitle/item/cost/total.
+DM Sans: UI labels/values and bill DATE/TIME/ITEM/COST/TOTAL labels.
+Indie Flower: final bill note, regular 400, 0.03em tracking.
+All font families fall back to Helvetica, sans-serif. Bill labels bold gray,
+values charcoal; barcode always pure #000000. Editor labels 13px bold DM Sans;
+editor input values (including note) 16px regular DM Sans.
+Cream, charcoal, muted sage. Input/control boxes rounded. Main CTAs black/white;
+PREVIEW and SAVE have transparent fill, dark text/arrows, dark rounded borders.
+Recipient SAVE matches the Create your own button's width and height, with a
+9px corner radius. Retain 80px + safe-area bottom clearance below mobile footer
+credit, which reads Created by @katsyso (11px mobile, 12px desktop).
 
-DATA / COMPATIBILITY
-Draft key: bill-please-draft-v2. Final key: bill-please-final-v2.
-Normalize() handles untrusted data, older paper names, and missing location.
-Required: title, valid date, quarter-hour time, at least one complete item/cost.
-Optional: subtitle (hasSubtitle), location (60 chars), total text, final note.
-A shared link is bill.html# followed by base64url-encoded UTF-8 JSON. It is a
-self-contained snapshot, not encryption. Anyone with the link can read it.
-Keep older links working; don't remove normalization just because no backend
-exists. No bill is uploaded by the app. Copies of old links cannot be revoked.
-No stored short URLs, sync, or per-bill social-image metadata exist currently.
+NOVEMBER 26 CHANGES
+Home title: Keep a receipt of your hangouts. Intro: Design a bill, record a
+personal message and share it with a friend. Home bills fade in over .65s after
+fonts settle; their five-second rotation starts after the fade. Reduced motion
+skips the fade and automatic rotation. No carousel pause button.
+Paper's visible label is now Color; stored field name paper is unchanged.
+Colors are vintage/white/mint; styles are perforated/coffee/crumpled.
+Style thumbnails: simple white outlined bill, contained coffee ring, supplied
+crumpled-icon.png. One irregular grainy coffee ring is placed at top right in
+SVG and PNG using the same deterministic drawing commands.
+Subtext add button remains; remove-subtext button was removed. Users may clear
+its optional text. Each extra item row has a small gray remove button in the
+cost heading, above its input. Item/cost headers share a 24px row. TOTAL label
+keeps its horizontal position, with zero label margin to center it vertically.
+TOTAL placeholder is a day well spent. Submit button reads Create + arrow.
+Final copy success reads Link copied ✓. All download button text reads SAVE.
+Ready subtitle: Copy the link or save it to share it with a friend.
+Printer replay uses a reload icon. Feed stays bottom-first, three steps, 2.4s,
+with the supplied audio. Actions are invisible and inert until the feed ends,
+then fade in over .45s. Replaying repeats this sequence. Reduced motion reveals
+immediately without automatic audio; replay sound still requires a click.
 
-RENDERING
-layoutBill() returns the one measured layout for both SVG and PNG. Keep those
-outputs consistent when changing type, spacing, edges, textures, or fields.
-paperOutline() uses a fixed seed so SVG and PNG have the same irregular edge.
-Handwriting tracking is measured for wrapping and painted explicitly on Canvas.
-Location is centred in the date/time row, wraps inside its allotted width, and
-adds no space when empty. It must not overlap the date or time.
-Canvas exports only the bill at 3x size. It must never include printer hardware.
-ready.html has a 3-step, 2.4-second printer feed after fonts settle. Reduced
-motion reveals immediately. It must not block copying or PNG download.
+SHARE LINKS — IMPORTANT BEHAVIOR CHANGE
+New links use https://bill-please.netlify.app/b/ID, where ID is 16 URL-safe random
+characters (96 random bits). No bill text is encoded in the copied short link.
+On the ready page a completed bill is sent to POST /api/bills once, cached per
+last bill in localStorage, and reused by Copy and Preview. Draft edits are never
+uploaded. A recipient loads its immutable snapshot with GET /api/bills?id=ID.
+The bill is now stored in Netlify, unlike the previous entirely client-only
+version. Anyone who has a short link can read its bill; IDs are not logins.
+Store name: bill-please-shared-v1. Use getStore, not getDeployStore: data must
+survive deployments. No expiry, listing endpoint, overwrite, or deletion UI.
+Do not casually rename/delete this store or invalidate existing links.
+POST enforces same-origin browser requests, JSON, 24 KiB body cap, schema checks,
+12 item maximum, random IDs and conditional writes. Platform rate limit is 30
+requests per minute per IP+domain. Never log bills or Netlify credentials.
+A missing/broken service shows a retry message, never silently copies a huge URL
+or fabricates a short link. SAVE remains usable independently of sharing.
+New API requests time out after 15 seconds.
 
-RUN / CHANGE / VERIFY
-Run python3 tools/serve.py from this folder. It disables local browser caching.
-No npm install, API key, environment variable, or build command is necessary.
-A browser's own cache may show an old page once: reload it before debugging.
-If app.js/styles.css change, bump their query version consistently in all four
-HTML pages. Keep font files local and their license notices intact.
-Use docs/MAINTENANCE.txt's targeted checks. Actual iPhone/Android hardware testing
-is still a useful pre-launch step; viewport emulation isn't a real phone keyboard.
+BACKWARD COMPATIBILITY
+Old bill.html#BASE64URL links still decode locally, including missing location,
+older color names, and notes up to 400 characters. New editor notes are limited
+to 100 with a live counter. Preserve this distinction. Draft key remains
+bill-please-draft-v2; final key remains bill-please-final-v2. Share cache key is
+bill-please-share-v1. normalize() and complete() live in bill-data.js and are
+shared between browser and function; retain the same validation rules.
+The new /b/ paths need Netlify's internal rewrite plus bill.html's root base URL
+so fonts, images and scripts resolve correctly from nested paths.
 
-DEPLOYMENT / STATUS
-Repository: https://github.com/Katsys7/bill-please (public, owner-created).
-Live website: https://bill-please.netlify.app/
-Netlify Free, publish directory site,
-no build command. Vercel configuration is also provided. Stay on free plans.
-Any future AI platform has its own usage limits, but this code and the deployed
-app do not require Codex, ChatGPT, Antigravity, or Copilot to function.
+RENDERING / CHECKS
+layoutBill() is the single layout for SVG and 3x Canvas PNG. Keep edges, coffee
+stain, note tracking, textures, wrapping and font weights identical in both.
+Export only the bill, never printer hardware. crumpled-paper.png is unchanged.
+Use synthetic bills for tests; demo mode disables draft/final/share-cache writes.
+Bump app.js/styles.css/bill-data.js query versions in all four HTML pages after
+changes. Runtime files are fingerprinted in SHA256SUMS.txt.
 
-NOVEMBER 23 UPDATE
-New notes are limited to 100 characters with a counter. normalize() retains up
-to 400 characters for older share-link compatibility; don't truncate old links.
-?demo=1 on design.html uses synthetic data and disables storage writes on that
-page and its ready.html redirect. Use this for checks; preserve real drafts.
-Crumpled style uses assets/crumpled-paper.png in both SVG and PNG with opacity .34.
-Coffee ring center is just beyond the right edge, yielding a cropped half-ring.
-Printer feed translates the bill from -100% to 0 in three steps over 2.4s, showing
-its lower part first. Sound is the first 2.4s of the owner's supplied MP3. Some
-browsers block autoplay; the speaker button replays it with a user gesture.
-Respect reduced motion. All other bill actions work without sound or animation.
-figma-ready/ contains editable SVG references, fonts, tokens, and import notes.
-These are not native Figma components/Auto Layout, nor a two-way code connection.
-
-MOBILE FOOTER
-At widths up to 620px, footer bottom padding is 80px plus the device safe area.
-Keep this clearance below the centered creator credit so Netlify Free’s fixed
-bottom-right badge does not obscure it. Desktop footer spacing is unchanged.
+RUN / DEPLOY
+UI-only preview: python3 tools/serve.py --port 4173 (or an unused port).
+Short links require the Netlify backend; the plain Python server cannot provide
+them. For full local integration, use Node 22+, npm ci, and Netlify CLI dev
+against your site; sign in yourself if it requests access.
+Offline API tests: npm ci then npm test. No live bill data is required.
+Netlify installs the locked dependency and bundles the function automatically.
+Publish directory site, base directory blank, build command blank. Keep main
+connected and automatic publishing enabled. No manual environment variables
+or separate storage account are needed for the SDK in deployed Functions.
+Stay on Free: Functions/Blobs consume included hosting credits; the Free hard
+cap can pause service, so this is not unlimited traffic or unlimited storage.
+Do not enable paid upgrades or auto recharge. No AI credits are needed to run.
+Vercel/GitHub Pages can still serve the frontend, but these new short links need
+the Netlify function/store or an explicitly approved replacement implementation.

@@ -10,3 +10,7 @@ Texture copied unchanged; web/SVG/PNG render it at 34% opacity.
 Sound: freesound_community-printer-106935.mp3, first 100 MPEG Layer III frames,
 2.4 seconds / 48,000 bytes. Source file unchanged. No ownership or license
 for these supplied files is asserted by this package; retain their provenance.
+
+2026-11-26: crumpled-icon.png copied unchanged from the owner’s supplied icon.
+Coffee ring is deterministic vector code inspired by the supplied stain reference;
+the reference photograph is not embedded or used as a full bill background.
