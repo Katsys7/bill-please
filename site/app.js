@@ -95,7 +95,7 @@ function layoutBill(bill) {
   commands.push({kind:'text',text:'ITEM',size:11,family:SANS,weight:700,color:'#757a71',x:pad,y,align:'left'});
   commands.push({kind:'text',text:'COST',size:11,family:SANS,weight:700,color:'#757a71',x:width-pad,y,align:'right'});
   y+=25;
-  bill.items.forEach(item=>pair(item.name.trim()||'Item',item.cost.trim()||'Cost'));
+  bill.items.forEach(item=>pair(item.name.trim(),item.cost.trim()));
   y+=1;rule();pair('TOTAL',bill.total,13,SANS);
   if(bill.note.trim()){y+=15;text(bill.note,21,{align:'center',family:HAND,lineHeight:25});y+=6}
   y+=12;
@@ -287,6 +287,7 @@ function setupDesign() {
         const caption=document.createElement('label');caption.htmlFor=`${key}-${index}`;caption.append(document.createTextNode(label+' '));
         const star=document.createElement('span');star.setAttribute('aria-hidden','true');star.textContent='*';caption.append(star);
         const input=document.createElement('input');input.id=`${key}-${index}`;input.name=`${key}-${index}`;input.value=item[key];input.required=true;input.maxLength=max;input.autocomplete='off';input.setAttribute('aria-label',`${label} ${index+1}`);
+        if(index===0)input.placeholder=key==='name'?'One long conversation':'Overdue';
         input.addEventListener('input',()=>{draft.items[index][key]=input.value;refresh()});
         const heading=document.createElement('div');heading.className='item-heading';heading.append(caption);
         if(key==='cost'&&index>0){const remove=document.createElement('button');remove.type='button';remove.className='item-remove';remove.setAttribute('aria-label',`Remove item ${index+1}`);remove.textContent='−';remove.addEventListener('click',()=>{draft.items.splice(index,1);renderItems();refresh();$('add-item').focus()});heading.append(remove)}
