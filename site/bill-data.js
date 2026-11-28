@@ -13,7 +13,7 @@ function timeIsValid(value) {return typeof value==='string'&&/^([01]\d|2[0-3]):(
 function clean(value,max) {return typeof value==='string'?value.slice(0,max):''}
 function normalize(value) {
   if(!value||typeof value!=='object'||!Array.isArray(value.items)) throw new Error('Invalid bill');
-  return {v:2,title:clean(value.title,60),subtitle:value.hasSubtitle===true?clean(value.subtitle,120):'',hasSubtitle:value.hasSubtitle===true,location:clean(value.location,60),date:dateIsValid(value.date)?value.date:'',time:timeIsValid(value.time)?value.time:'',items:value.items.slice(0,MAX_ITEMS).map(item=>({name:clean(item?.name,90),cost:clean(item?.cost,60)})),total:clean(value.total,70),note:clean(value.note,400),paper:Object.hasOwn(PAPERS,value.paper)?value.paper:({smooth:'white',fiber:'vintage',laid:'mint'}[value.paper]||'white'),style:Object.hasOwn(STYLES,value.style)?value.style:'perforated'};
+  return {v:2,title:clean(value.title,60),subtitle:value.hasSubtitle===true?clean(value.subtitle,120):'',hasSubtitle:value.hasSubtitle===true,location:clean(value.location,60),date:dateIsValid(value.date)?value.date:'',time:timeIsValid(value.time)?value.time:'',items:value.items.slice(0,MAX_ITEMS).map(item=>({name:clean(item?.name,90),cost:clean(item?.cost,60)})),total:clean(value.total,70),note:clean(value.note,400),recipientName:clean(value.recipientName,60),paper:Object.hasOwn(PAPERS,value.paper)?value.paper:({smooth:'white',fiber:'vintage',laid:'mint'}[value.paper]||'white'),style:Object.hasOwn(STYLES,value.style)?value.style:'perforated'};
 }
 function complete(bill) {
   return !!(bill.title.trim()&&dateIsValid(bill.date)&&timeIsValid(bill.time)&&bill.items.length&&bill.items.every(item=>item.name.trim()&&item.cost.trim()));

@@ -13,7 +13,7 @@
 <link rel="icon" href="data:,">
 <link rel="preload" href="assets/LibreBaskerville.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/DMSans.woff2" as="font" type="font/woff2" crossorigin><link rel="preload" href="assets/IndieFlower.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="styles.css?v=20261126r2"><script src="pickers.js?v=20261126r1" defer></script><script src="bill-data.js?v=20261126r1" defer></script><script src="app.js?v=20261126r4" defer></script>
+<link rel="stylesheet" href="styles.css?v=20261126r2"><script src="pickers.js?v=20261126r1" defer></script><script src="bill-data.js?v=20261126r2" defer></script><script src="app.js?v=20261126r5" defer></script>
 </head>
 <body data-page="design">
 <header class="site-header"><a href="index.html">bill, please</a></header>
@@ -29,6 +29,7 @@
 <div class="field"><label for="bill-title">Bill Title <span aria-hidden="true">*</span></label><input id="bill-title" name="title" maxlength="60" placeholder="Sunday, unhurried" required autocomplete="off"></div>
 <button class="add-subtext" type="button" id="add-subtitle">+ Add a subtext</button>
 <div class="field" id="subtitle-field" hidden><div class="field-heading"><label for="bill-subtitle">Subtext <span class="optional">(optional)</span></label></div><input id="bill-subtitle" name="subtitle" maxlength="120" autocomplete="off"></div>
+<div class="field"><label for="bill-recipient">For <span class="optional">(optional)</span></label><input id="bill-recipient" name="recipientName" maxlength="60" placeholder="their name" autocomplete="off"></div>
 <div class="field"><label for="bill-location">Location <span class="optional">(optional)</span></label><input id="bill-location" name="location" maxlength="60" autocomplete="off"></div>
 <div class="two-fields"><div class="field"><label id="date-label" for="date-trigger">Date <span aria-hidden="true">*</span></label><div class="picker-wrap" id="date-picker"><input id="bill-date" name="date" type="hidden"><button id="date-trigger" class="picker-trigger" type="button" aria-labelledby="date-label date-value" aria-haspopup="dialog" aria-expanded="false" aria-controls="date-popover" aria-required="true"><span id="date-value"></span><svg class="field-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="16" height="16" rx="3"/><path d="M8 3v4m8-4v4M4 11h16"/></svg></button><div id="date-popover" class="picker-popover date-popover" role="dialog" aria-label="Choose a date" hidden></div></div></div><div class="field"><label id="time-label" for="time-trigger">Time <span aria-hidden="true">*</span></label><div class="picker-wrap" id="time-picker"><input id="bill-time" name="time" type="hidden"><button id="time-trigger" class="picker-trigger" type="button" aria-labelledby="time-label time-value" aria-haspopup="listbox" aria-expanded="false" aria-controls="time-popover" aria-required="true"><span id="time-value"></span><svg class="field-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7v5l3.5 2"/></svg></button><div id="time-popover" class="picker-popover time-popover" role="listbox" aria-label="Choose a time" hidden></div></div></div></div>
 <div id="item-fields"></div>

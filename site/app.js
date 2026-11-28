@@ -21,7 +21,7 @@ function localTime() {
   return `${String(date.getHours()).padStart(2,'0')}:${String(Math.floor(date.getMinutes()/15)*15).padStart(2,'0')}`;
 }
 function blankBill() {
-  return {v:2,title:'',subtitle:'',hasSubtitle:false,location:'',date:localDate(),time:localTime(),items:[{name:'',cost:''}],total:'',note:'',paper:'white',style:'perforated'};
+  return {v:2,title:'',subtitle:'',hasSubtitle:false,location:'',date:localDate(),time:localTime(),items:[{name:'',cost:''}],total:'',note:'',recipientName:'',paper:'white',style:'perforated'};
 }
 function readStored(key) {try {const raw=localStorage.getItem(key);return raw?normalize(JSON.parse(raw)):null} catch {return null}}
 function storeBill(key,value) {if(new URLSearchParams(location.search).has('demo'))return;try{localStorage.setItem(key,JSON.stringify(value))}catch{/* The link still carries a complete bill when storage is unavailable. */}}
@@ -271,7 +271,7 @@ function setupDesign() {
   currentBill=draft;
   const form=$('bill-form');
 
-  const bindings={'bill-title':'title','bill-subtitle':'subtitle','bill-location':'location','bill-date':'date','bill-time':'time','bill-total':'total','bill-note':'note'};
+  const bindings={'bill-title':'title','bill-subtitle':'subtitle','bill-recipient':'recipientName','bill-location':'location','bill-date':'date','bill-time':'time','bill-total':'total','bill-note':'note'};
   function refresh(){renderBill($('live-bill'),draft);storeBill(DRAFT_KEY,draft)}
   for(const [id,key]of Object.entries(bindings)){$(id).value=draft[key];$(id).addEventListener('input',()=>{draft[key]=$(id).value;if(id==='bill-note'){resizeNote();updateNoteCount()}refresh()})}
   for(const name of ['paper','style'])for(const radio of form.querySelectorAll(`input[name=${name}]`)){radio.checked=radio.value===draft[name];radio.addEventListener('change',()=>{draft[name]=radio.value;refresh()})}
@@ -383,6 +383,7 @@ async function setupShared() {
       const response=await fetchWithTimeout('/api/bills?id='+encodeURIComponent(id));if(!response.ok)throw new Error('Bill not found');bill=normalize(await response.json());
     }
     if(!complete(bill))throw new Error('Invalid bill');currentBill=bill;await document.fonts.ready;renderBill($('shared-bill'),bill);save.hidden=false;
+    const h=document.querySelector('.intro h1');if(h&&bill.recipientName)h.textContent=`Thanks for your company, ${bill.recipientName}!`;
     save.addEventListener('click',()=>downloadBill(bill,save));
   }catch{const status=$('bill-status');status.textContent="This bill couldn't be loaded. Please check the link and try again.";status.hidden=false}
 }
