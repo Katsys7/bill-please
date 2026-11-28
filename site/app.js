@@ -307,15 +307,16 @@ function setupDesign() {
     if(!dateIsValid(draft.date)){$('date-trigger').click();return}
     if(!timeIsValid(draft.time)){$('time-trigger').click();return}
     if(!form.reportValidity()||!complete(draft))return;
-    storeBill(DRAFT_KEY,draft);storeBill(FINAL_KEY,draft);
+    submitted=true;storeBill(FINAL_KEY,draft);try{localStorage.removeItem(DRAFT_KEY)}catch{}
     location.href='ready.html'+(demo?'?demo=1':'')+'#'+encodeBill(draft);
   });
   function resizeNote(){const note=$('bill-note');note.style.height='auto';note.style.height=Math.min(Math.max(note.scrollHeight,100),450)+'px'}
   function updateNoteCount(){const length=$('bill-note').value.length;$('note-count').textContent=length+'/100';$('note-count').classList.toggle('over-limit',length>100);$('bill-note').setCustomValidity(length>100?'Please keep the note to 100 characters or fewer.':'')}
   resizeNote();updateNoteCount();
   initBillPickers($('bill-date'),$('bill-time'));
-  window.addEventListener('pagehide',()=>storeBill(DRAFT_KEY,draft));
-  document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')storeBill(DRAFT_KEY,draft)});
+  let submitted=false;
+  window.addEventListener('pagehide',()=>{if(!submitted)storeBill(DRAFT_KEY,draft)});
+  document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden'&&!submitted)storeBill(DRAFT_KEY,draft)});
   syncSubtitle();renderItems();refresh();
 }
 const SHARE_CACHE_KEY='bill-please-share-v1';
