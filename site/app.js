@@ -287,7 +287,7 @@ function setupDesign() {
         const caption=document.createElement('label');caption.htmlFor=`${key}-${index}`;caption.append(document.createTextNode(label+' '));
         const star=document.createElement('span');star.setAttribute('aria-hidden','true');star.textContent='*';caption.append(star);
         const input=document.createElement('input');input.id=`${key}-${index}`;input.name=`${key}-${index}`;input.value=item[key];input.required=true;input.maxLength=max;input.autocomplete='off';input.setAttribute('aria-label',`${label} ${index+1}`);
-        if(index===0)input.placeholder=key==='name'?'One long conversation':'Overdue';
+        if(index===0)input.placeholder=key==='name'?'Catching up':'Overdue';
         input.addEventListener('input',()=>{draft.items[index][key]=input.value;refresh()});
         const heading=document.createElement('div');heading.className='item-heading';heading.append(caption);
         if(key==='cost'&&index>0){const remove=document.createElement('button');remove.type='button';remove.className='item-remove';remove.setAttribute('aria-label',`Remove item ${index+1}`);remove.textContent='−';remove.addEventListener('click',()=>{draft.items.splice(index,1);renderItems();refresh();$('add-item').focus()});heading.append(remove)}
